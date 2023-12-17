@@ -1,0 +1,63 @@
+preprocessing:
+  map_change_columns:
+    Gender:
+      1: Female
+      0: Male
+  name_change_columns:
+    Female_0: Male
+    Female_1: Female
+    
+  change_type_columns:
+    Status: category
+    Region: category
+    Geography: category
+    Province: category
+    Matric: category
+    Degree: category
+    Diploma: category
+    Schoolquintile: category
+    Math: category
+    Mathlit: category
+    Additional_lang: category
+    Home_lang: category
+    Science: category
+    Gender: category
+
+  drop_columns: ["Person_id", "Survey_date", "Sa_citizen", "Round"]
+  drop_columns_clust: ["Person_id", "Survey_date", "Sa_citizen", "Round", "Birthmonth"]
+  train_path: ../data/raw/Train.csv
+  unique_values_path: ../data/processed/unique_values.json
+  input_path: ../data/processed/input_values.json
+  train_path_proc: ../data/processed/train.csv
+  test_path_proc: ../data/processed/test.csv
+  clust_proc: ../data/processed/clust.csv
+  test_size: 0.2
+  target_column: Target
+  random_state: 10
+
+train:
+  n_trials: 5
+  n_folds: 3
+  n_clusters: 5
+  affinity: cosine
+  random_state: 10
+  n_components: 3
+  target_column: Target
+  model_path: ../models/lgb_baseline.joblib
+  study_path: ../models/lgb_optuna.joblib
+  clust_path: ../models/clustering.joblib
+  metrics_path: ../report/metrics.json
+  params_path: ../report/best_params.json
+
+evaluate:
+  predict_path: ../data/raw/test_set_to_load_fastapi/Test.csv
+
+endpoints:
+ # train: 'http://localhost:8000/train'
+ # prediction_input: 'http://localhost:8000/predict_input'
+ # prediction_from_file: 'http://localhost:8000/predict'
+ # clustering: 'http://localhost:8000/clustering'
+  train: 'http://fastapi:8000/train'
+  prediction_input: 'http://fastapi:8000/predict_input'
+  prediction_from_file: 'http://fastapi:8000/predict'
+  clustering: 'http://localhost:8000/clustering.clust'
